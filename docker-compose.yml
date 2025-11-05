@@ -44,6 +44,21 @@ services:
     networks:
       - tripactive-net
 
+  postgres-auth:
+    image: postgres:16
+    container_name: tripactive-postgres-auth
+    restart: always
+    environment:
+      POSTGRES_USER: tripactive
+      POSTGRES_PASSWORD: tripactive
+      POSTGRES_DB: tripactive_auth
+    ports:
+      - "5436:5432"
+    volumes:
+      - pgdata_auth:/var/lib/postgresql/data
+    networks:
+      - tripactive-net
+
   users:
     build:
       context: .
@@ -65,7 +80,7 @@ services:
       dockerfile: cmd/activities/Dockerfile
     container_name: tripactive-activities
     ports:
-      - "8081:8081"
+      - "8082:8082"
     env_file: cmd/activities/.env
     environment:
       DATABASE_URL: postgres://tripactive:tripactive@postgres-tripactive:5432/tripactive_activities?sslmode=disable
@@ -80,12 +95,27 @@ services:
       dockerfile: cmd/bookings/Dockerfile
     container_name: tripactive-bookings
     ports:
-      - "8081:8081"
+      - "8083:8083"
     env_file: cmd/bookings/.env
     environment:
       DATABASE_URL: postgres://tripactive:tripactive@postgres-tripactive:5432/tripactive_bookings?sslmode=disable
     depends_on:
       - postgres-bookings
+    networks:
+      - tripactive-net
+
+  auth:
+    build:
+      context: .
+      dockerfile: cmd/auth/Dockerfile
+    container_name: tripactive-auth
+    ports:
+      - "8084:8084"
+    env_file: cmd/auth/.env
+    environment:
+      DATABASE_URL: postgres://tripactive:tripactive@postgres-tripactive:5432/tripactive_auth?sslmode=disable
+    depends_on:
+      - postgres-auth
     networks:
       - tripactive-net
 
@@ -96,3 +126,4 @@ volumes:
   pgdata_users:
   pgdata_activities:
   pgdata_bookings:
+  pgdata_auth:
