@@ -32,7 +32,7 @@ func main() {
 	}
 
 	go func() {
-		log.Info().Msgf("🚀 Starting HTTP server on :%s", cfg.Port)
+		log.Info().Msgf("starting HTTP server on :%s", cfg.Port)
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatal().Msgf("server failed: %v", err)
 		}

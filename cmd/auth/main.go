@@ -32,8 +32,7 @@ func main() {
 	}()
 
 	r := chi.NewRouter()
-	repo := auth.NewRepository(db)
-	svc := auth.NewService(repo)
+	svc := auth.NewService()
 	h := auth.NewHandler(svc)
 	r.Mount("/auth", h.Routes())
 
