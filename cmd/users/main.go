@@ -18,7 +18,7 @@ func main() {
 	log.Info().Msg("logger initialized")
 	cfg := shared.LoadConfig()
 	if cfg.Port == "" {
-		log.Fatal().Msg("❌ PORT is not set in .env")
+		log.Fatal().Msg("PORT is not set in .env")
 	}
 
 	r := chi.NewRouter()
